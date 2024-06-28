@@ -69,4 +69,30 @@ rds_password = os.environ.get('RDS_PASSWORD')
 rds_db = os.environ.get('RDS_DB')
 
 # Connect to the database
-connection =
+connection = pymysql.connect(host=rds_host, user=rds_user, password=rds_password, db=rds_db)
+
+def fetch_data():
+    try:
+        with connection.cursor() as cursor:
+            sql = "SELECT * FROM CallOut"  # Example query
+            cursor.execute(sql)
+            result = cursor.fetchall()
+            for row in result:
+                print(row)
+    
+    except Exception as e:
+        print(f"Error: {str(e)}")
+    
+    finally:
+        connection.close()
+
+if __name__ == "__main__":
+    fetch_data()
+EOT
+
+# Make the Python script executable and run it
+chmod +x /home/ec2-user/fetch_data.py
+/usr/bin/python3 /home/ec2-user/fetch_data.py
+
+# Schedule infrastructure destruction after 30 minutes
+echo "30 * * * * root /usr/local/bin/terraform destroy -auto-approve -var 'db_password=${var.db_password}'" >> /etc/crontab

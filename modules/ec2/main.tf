@@ -1,6 +1,6 @@
 resource "aws_instance" "app_server" {
   count           = var.instance_count
-  ami             = "ami-0c55b159cbfafe1f0" # Amazon Linux 2 AMI
+  ami             = "ami-05d929ac8893c382f" #Amazon Linux 2023 AMI - t2.micro
   instance_type   = var.instance_type
   key_name        = var.ec2_key_pair
   security_groups = [var.security_group_id]
